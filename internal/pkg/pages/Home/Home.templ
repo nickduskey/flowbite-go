@@ -1,0 +1,25 @@
+package home
+
+import (
+    "github.com/nickduskey/flowbite-go/internal/pkg/components/base"
+	"github.com/nickduskey/flowbite-go/pkg/components/Avatar"
+)
+
+var (
+    avatarSrc string = "/profile-picture-5.jpg"
+    rounded bool = true
+)
+
+templ Home() {
+    @base.Base("flowbite-go") {
+        <div class="p-4">
+            <h1 class="text-3xl py-2"><code>flowbite-svelte</code></h1>
+            <h2 class="text-2xl py-2">Components</h2>
+            <h3 class="text-xl py-2">Avatar</h3>
+            @avatar.Avatar(&avatar.Opts{
+                Src: &avatarSrc,
+                Rounded: &rounded,
+            })
+        </div>
+    }
+}

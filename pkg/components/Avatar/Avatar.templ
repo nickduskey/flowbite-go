@@ -1,0 +1,82 @@
+package avatar
+
+type Opts struct {
+	Rounded             *bool
+	PlaceholderInitials *string
+	Border              *bool
+	ClassNames          []string
+	Src                 *string
+	Dot                 *bool
+	DotColor            *string
+	DotPlacement        *string
+	Stacked             *bool
+	Text                *string
+	Size                *string
+	Href                *string
+}
+
+func buildRoundedClassNames(opts *Opts) []string {
+	var classNames []string
+	if opts.Rounded != nil {
+		classNames = append(classNames, "rounded-full")
+	} else {
+		classNames = append(classNames, "rounded")
+	}
+	return classNames
+}
+
+func buildSizeClassNames(opts *Opts) []string {
+    d := []string{"w-10", "h-10"}
+    if opts.Size == nil {
+        return d
+    }
+    switch *opts.Size {
+    case "xs":
+        return []string{"w-6", "h-6"}
+    case "sm":
+        return []string{"w-8", "h-8"}
+    case "lg":
+        return []string{"w-20", "h-20"}
+    case "xl":
+        return []string{"w-36", "h-36"}
+    default:
+        return d
+    }
+}
+
+func getType(opts *Opts) string {
+    if opts.Src != nil {
+        return "img"
+    }
+    if opts.PlaceholderInitials != nil {
+        return "initials"
+    }
+    return "default"
+}
+
+templ imgAvatar(opts *Opts) {
+    <img class={ buildRoundedClassNames(opts), buildSizeClassNames(opts) } src={ *opts.Src } alt="avatar" />
+}
+
+templ initialsAvatar(opts *Opts) {
+		<div class="relative overflow-hidden bg-gray-100 dark:bg-gray-600" class={buildSizeClassNames(opts)}>
+				<span class="font-medium text-gray-600 dark:text-gray-300">{ *opts.PlaceholderInitials }</span>
+		</div>
+}
+
+templ defaultAvatar() {
+		<div class="relative overflow-hidden bg-gray-100 dark:bg-gray-600">
+				<svg class="absolute text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+		</div>
+}
+
+templ Avatar(opts *Opts) {
+    switch getType(opts) {
+        case "img":
+		    @imgAvatar(opts)
+		case "initials":
+		    @initialsAvatar(opts)
+		default:
+		    @defaultAvatar()
+    }
+}
